@@ -13,6 +13,14 @@ seaborn.set()
 import os, time, sys, pickle
 from dateutil.parser import parse
 
+deprecated_date_list = ['2016-08-15']
+font = {'family': 'SimHei'}
+
+def filter_exception_date_in_series(data_series):
+    # drop deprecated date index
+    for date in deprecated_date_list:
+        data_series = data_series.drop(parse(date))
+    return data_series
 
 if __name__=='__main__':
     if len(sys.argv) < 2:
@@ -32,15 +40,22 @@ if __name__=='__main__':
     print(name)
     print(data_frame.index)
     print(data_frame.columns)
-    dpa_data_series = pd.Series(dynamic_pe_average, index=date_list).sort_index(ascending=False)
+    dpa_data_series = pd.Series(dynamic_pe_average, index=date_list.values).sort_index(ascending=False)
+    # print('2015-12-25: ', dpa_data_series['2015-12-25'])
+    # print('2016-08-15: ', dpa_data_series['2016-08-15'])
+    dpa_data_series = filter_exception_date_in_series(data_series=dpa_data_series)
     print(dpa_data_series)
+    # print(dpa_data_series[parse('2020-03-06')])
+    print(dpa_data_series[parse('2015-12-21')])
     # pe_list = dpa_data_series.tolist()
     # dpa_data_series.plot()
     plt.style.use('seaborn-whitegrid')
-    plt.plot(dpa_data_series.index, dpa_data_series.values, color='r')
+    plt.plot(dpa_data_series.index, dpa_data_series.values, color='r', label=industry_code + name)
     plt.ylabel(u'市盈率', fontproperties='SimHei')
     plt.xlabel(u'时间轴', fontproperties='SimHei')
-    plt.title(industry_code + ':' + name, fontproperties='SimHei')
+    plt.title(u'动态市盈率均值', fontproperties='SimHei')
+    plt.ylim(-1, 150)
+    plt.legend(loc=0, prop=font)
     plt.grid(True)
    # plt.hist(dpa_data_series)
    # plt.title('industry history pe')
