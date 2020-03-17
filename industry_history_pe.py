@@ -18,6 +18,10 @@ if __name__=='__main__':
     input_code_list = input().upper().split(' ')
     print(input_code_list)
     print(default_dateset_path)
+    for item in titles:
+        print(item, ': ', titles[item])
+    print('请以上选项中选择您要显示的PE类型 ')
+    pe_key = input()
     max_pe = 0.0
     for code in input_code_list:
         csv_data_file = default_dateset_path + code + '.csv'
@@ -26,22 +30,16 @@ if __name__=='__main__':
         name = data_frame['industry_name'][0]
         industry_code = data_frame['industry_code'][0]
         history_count = np.array(data_frame['company_count'])
-        static_pe_average = np.array(data_frame['static_pe_average'])
-        static_pe_median = np.array(data_frame['static_pe_median'])
-        dynamic_pe_average = np.array(data_frame['dynamic_pe_average'])
-        dynamic_pe_median = np.array(data_frame['dynamic_pe_median'])
+        pe_data_array = np.array(data_frame[pe_options[pe_key]])
         print(name)
         print(data_frame.index)
         print(data_frame.columns)
-        dpa_data_series = pd.Series(dynamic_pe_average, index=date_list.values).sort_index(ascending=False)
+        dpa_data_series = pd.Series(pe_data_array, index=date_list.values).sort_index(ascending=False)
         dpa_data_series = filter_exception_date_in_series(data_series=dpa_data_series)
         tmp_max_val = dpa_data_series.values.max()
         print('tmp_max_val: ', tmp_max_val)
         if max_pe < tmp_max_val:
             max_pe = tmp_max_val
         print(dpa_data_series)
-        # print(dpa_data_series[parse('2015-12-21')])
-    # pe_list = dpa_data_series.tolist()
-    # dpa_data_series.plot()
         plt.plot(dpa_data_series.index, dpa_data_series.values, label=industry_code + name)
-    show_pe_chart(max_pe=max_pe)
+    show_pe_chart(max_pe=max_pe, pe_key=pe_key)
