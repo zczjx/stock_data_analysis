@@ -26,6 +26,7 @@ def show_ratio_chart(ylabel=''):
     global ylabel_dict
     plt.style.use('seaborn-whitegrid')
     plt.xlabel(u'时间轴', fontproperties='SimHei')
+    plt.xticks(rotation=-90)
     plt.title(ylabel, fontproperties='SimHei')
     # plt.xlim(2000, 2020)
     # plt.ylim(-1, max_pe+10)
@@ -73,11 +74,13 @@ if __name__=='__main__':
     social_ratio_series = pd.Series(data_array, index=salary_date_list.values).sort_index(ascending=True)
     print('social_ratio_series: ', social_ratio_series)
     plt.plot(social_ratio_series.index, social_ratio_series.values, label=xlabel_dict['social_ratio'])
+    plt.xticks(social_ratio_series.index)
 
     # 房价国有单位收入比
     data_array = house_price.values / state_owned_salary_series.values
     state_owned_ratio_series = pd.Series(data_array, index=salary_date_list.values).sort_index(ascending=True)
     plt.plot(state_owned_ratio_series.index, state_owned_ratio_series.values, label=xlabel_dict['state_owned_ratio'])
+    plt.xticks(state_owned_ratio_series.index)
 
     show_ratio_chart(ylabel=ylabel_dict['ration'])
 

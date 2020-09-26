@@ -24,6 +24,7 @@ def show_salary_chart(ylabel=''):
     global ylabel_dict
     plt.style.use('seaborn-whitegrid')
     plt.xlabel(u'时间轴', fontproperties='SimHei')
+    plt.xticks(rotation=-90)
     plt.title(ylabel, fontproperties='SimHei')
     # plt.xlim(2000, 2020)
     # plt.ylim(-1, max_pe+10)
@@ -55,7 +56,7 @@ if __name__=='__main__':
     data_array = np.array(data_frame[xlabel_dict['state_owned']])
     salary_data_series = pd.Series(data_array, index=date_list.values).sort_index(ascending=False)
     plt.plot(salary_data_series.index, salary_data_series.values, label=xlabel_dict['state_owned'])
-    # plt.xticks(salary_data_series.index)
+    plt.xticks(salary_data_series.index)
 
     show_salary_chart(ylabel=ylabel_dict['salary'])
 
